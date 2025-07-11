@@ -3,14 +3,19 @@ import os
 
 mcp = FastMCP("OTOCP")
 
-home_dir = os.path.expanduser("~")
-TODO_FILE = os.path.join(home_dir, "Documents", "Obsidian Vault", "todo.md")
-
+DEFAULT_TODO_PATH = os.path.join(
+    os.path.expanduser("~"), 
+    "Documents", 
+    "Obsidian Vault", 
+    "todo.md"
+)
+TODO_FILE = os.getenv("OTOCP_TODO_PATH", DEFAULT_TODO_PATH)
 
 def ensure_file():
+    os.makedirs(os.path.dirname(TODO_FILE), exist_ok=True)
     if not os.path.exists(TODO_FILE):
         with open(TODO_FILE, "w") as f:
-            f.write("")
+            f.write("# Todo List\n\n")
 
 
 @mcp.tool()
