@@ -1,9 +1,16 @@
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "mcp-server-demo"
-version = "0.1.0"
-description = "Add your description here"
+name = "otocp"
+version = "1.0.0"
+description = "A MCP server written in python to add, list, complete and delete tasks in Obsidian."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "mcp[cli]>=1.11.0",
+    "mcp[cli]>=1.11.0"
 ]
+
+[project.scripts]
+otocp = "otocp:run_server"  
