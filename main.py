@@ -1,19 +1,45 @@
-# server.py
 from mcp.server.fastmcp import FastMCP
+import os
 
-# Create an MCP server
-mcp = FastMCP("Demo")
+mcp = FastMCP("OTOCP")
 
+home_dir = os.path.expanduser("~")
+TODO_FILE = os.path.join(home_dir, "Documents", "Obsidian Vault", "todo.md")
 
-# Add an addition tool
+def ensure_file():
+    if not os.path.exists(TODO_FILE):
+        with open(TODO_FILE, "w") as f:
+            f.write("")
+
 @mcp.tool()
-def sum(a: int, b: int) -> int:
-    """Add two numbers"""
-    return a + b
+def add_task(task: str) -> str:
+    """
+    Append a new task to the todo file.
 
+    Args: 
+        task (str): The task to be added.
 
-# Add a dynamic greeting resource
-@mcp.resource("greeting://{name}")
-def get_greeting(name: str) -> str:
-    """Get a personalized greeting"""
-    return f"Hello, {name}!"
+    Returns:
+        str: Confirmation message indicating that task was added.
+    """
+    ensure_file()
+    with open(TODO_FILE, "a") as f:
+        f.write(f"- [ ] {task}\n")
+    return "Task Saved!"
+
+@mcp.tool()
+def read_tasks() -> str:
+    """
+    Read and return all the tasks from the todo file.
+
+    Returns:
+        str: All tasks as a single string seperated by line breaks. If no tasks exist, a default message is returned.
+    """
+
+    ensure_file()
+    with open(TODO_FILE, "r") as f:
+        content = f.read().strip()
+    return content or "No tasks yet."
+
+if __name__ == "__main__":
+    mcp.run()
